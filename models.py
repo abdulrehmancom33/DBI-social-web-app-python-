@@ -3,22 +3,16 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
-
-
-
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager
 )
 
 # Your models here.
-
-
 class UserManager(BaseUserManager):
     
     #creates user with given email and password
     def create_user(self, email, resetkey = None, full_name = None, city = None, country = None, password=None):
             
-
         if email is None:
             raise ValueError('Email is required.')
             # resetkey = "default@dbisystems.com"
@@ -29,8 +23,6 @@ class UserManager(BaseUserManager):
         else:
             print("All OK")
             
-
-
         user = self.model(
             email=self.normalize_email(email),
             resetkey = resetkey,
@@ -41,7 +33,7 @@ class UserManager(BaseUserManager):
         )
         
         user.save(using=self._db)
-        
+    
         return user
 
     #creates staffuser with given email and password
@@ -58,7 +50,6 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    
     #creates superuser with given email and password
     def create_superuser(self, email, password):
         user = self.create_user(
@@ -69,15 +60,13 @@ class UserManager(BaseUserManager):
             city = None,
             country = None
         )
-        
         user.set_password(password)
         user.staff = True
         user.admin = True
         user.save(using=self._db)
+        
         return user
     
-
-
 class User(AbstractBaseUser):
     email = models.EmailField(
         verbose_name    =   'email address',
@@ -113,7 +102,6 @@ class User(AbstractBaseUser):
         blank = True,
         null = True
     )
-    
     
     #password field is not requited as it's built in
 
@@ -166,11 +154,8 @@ class User(AbstractBaseUser):
 def upload_location(instance,filename):
         return "%s/%s" %('ImageRepository',filename)
 
-    
-
 class Image(models.Model):
 
-    
     #media_url = models.TextField()
     fileToUpload = models.ImageField(upload_to=upload_location)
    # This field should be string or text...
@@ -208,7 +193,6 @@ class Dog(models.Model):
     isDog = models.BooleanField()
     def __int__(self):
         return str(self.id)
-
 
 class Feed_Item(models.Model):
     feed_item_desc = models.TextField()
