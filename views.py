@@ -23,10 +23,8 @@ from rest_framework import status , generics , mixins,filters,viewsets
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 # from django.contrib.auth.hashers import *
-import boto3
-from rest_framework.status import (
+import boto3 from rest_framework.status import (
     HTTP_201_CREATED
-    
 )
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -95,11 +93,6 @@ class signUp(APIView):
                       "user" : None
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-            
-
-
 # LOGIN API
 class authenticate(APIView):
     queryset = User.objects.all()
@@ -153,9 +146,6 @@ class authenticate(APIView):
                     "user" : fnl_JSON
                 })
 
-
-
-
 # LOGOUT API
 class LogoutView(APIView):
     # authentication_classes = (authentication.TokenAuthentication,)
@@ -175,8 +165,6 @@ class LogoutView(APIView):
             return Response({
                 "Status" : "Failure"
             })
-        
-
 
 # GET BREED API
 class BreedListView(generics.ListCreateAPIView):
@@ -197,11 +185,8 @@ class Feed_Details(APIView):
             #imageid=request.data.get("media_type")
             
                 return Response(file_serializer.data)
-
             else:
-                
                 return Response({"detail":"Data not available"})
-
 
 # GET DOG FEEDS (ALL) API
 class Feed_ItemListView(generics.ListCreateAPIView):
@@ -236,32 +221,25 @@ class UploadViewSet(APIView):
                     "url": None,
                     "msg": "There was an issue while uploading your file."
                 })
-
-
+            
 # LIKE DOG API
 class Likedog(APIView):
         
     def post(self, request, *args, **kwargs):
-        
-
         try:
-
             feedid=self.request.data["feedid"]
             feedsid=Feed_Item.objects.get(id=feedid)
             
             userid=self.request.data["userid"]
             users=User.objects.get(id=userid)
-        
         except :
             return Response({
                 "Status":"Failure"
             })
         
         Liked_Dog.objects.create(liked_user=users, liked_feed_item=feedsid)
-       
         print(users)
-        if  feedsid and users is not None:
-            
+        if  feedsid and users is not None: 
             return Response({
                 "Status":"Success"
             })
@@ -269,8 +247,7 @@ class Likedog(APIView):
             return Response({
                 "Status":"Failure"
             })
-
-
+            
 # DISLIKE DOG API
 class DislikeDog(APIView):
     def post(self, request, *args, **kwargs):
@@ -300,8 +277,6 @@ class DislikeDog(APIView):
             return Response({
                 "Status":"Failure"
             })
-
-
         if Liked_Dog_qs.exists():
             Liked_Dog.objects.filter(liked_user=users,liked_feed_item=feedsid).delete()
         
@@ -313,15 +288,12 @@ class DislikeDog(APIView):
             return Response({
                 "Status":"Failure"
             })
-
-
 # SAVE RESULTS API
 class SaveResult(APIView):
 
     def post(self,request, *args, **kwargs):
 
         try:
-
             dogid=self.request.data["dogid"]
             dogsid=Dog.objects.get(id=dogid)
             descript=self.request.data['desc']
@@ -332,7 +304,6 @@ class SaveResult(APIView):
             return Response({
                 "Status":"Failure"
             })
-
         Feed_Item.objects.create(Feed_user=users, feed_item_dog=dogsid, feed_item_desc=descript, isSaveFeed = True)
         if dogsid and users is not None:
             return Response({
@@ -342,8 +313,6 @@ class SaveResult(APIView):
             return Response({
                 "Status":"Failure"
             })
-
-
 # GET ALL USERS DETAILS API
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -358,8 +327,6 @@ class UserViewSet(viewsets.ModelViewSet):
     #     print("Not Here")
     #     return super(UserViewSet, self).get_object()
        
-
-
 # GET MY SHARED OR SAVED DOG FEEDS API
 class Mydogfeeds(APIView):
     
@@ -367,8 +334,6 @@ class Mydogfeeds(APIView):
         
         # dogsid=Dog.objects.get(id=dogid)
         userid=self.request.data["userid"]
-
-        
         try:
             users=User.objects.get(id=userid)
             # dog=Feed_Item.objects.get(Feed_user=users)
@@ -395,7 +360,6 @@ class Mydogfeeds(APIView):
                 "Status":"No Data Found."
             })
 
-
 # GET MY LIKED FEEDS API
 class MyLikedFeeds(APIView):
     
@@ -419,8 +383,7 @@ class MyLikedFeeds(APIView):
             return Response({
                 "Status":"No Data Found."
             })
-
-
+            
 # SHARE FEED API
 class Sharefeed(APIView):
  
@@ -447,7 +410,6 @@ class Sharefeed(APIView):
                 "Status":"Failure"
             })
 
-
 # FORGET PASSWORD API
 class Forgetpass(APIView):
     def post(self, request, format = json):
@@ -470,8 +432,6 @@ class Forgetpass(APIView):
                     "Status" : "Faliure",
                     "userid": None 
                 })
-
-
 class changePassword(APIView):
     def post(self, request, format = json):
         print("In Login View")
@@ -495,7 +455,6 @@ class changePassword(APIView):
                     # "userid": None 
                 })
 
-
 # UPDATE USER DETAILS API
 class updateview(APIView):
     
@@ -509,14 +468,9 @@ class updateview(APIView):
         country = request.data.get("country")
         
         serializer_class = UserSerializer
-        
         print(fullname)
-
-        
-
         if userid is not None:
             user = User.objects.filter(id = userid)
-
             try:
                 passuser = User.objects.get(id = userid)
             except :
@@ -554,8 +508,6 @@ class updateview(APIView):
                     fulln = fullname
                 else:
                     fulln = passuser.full_name
-
-                
                 if city != "":
                     user.update(city = city )
                     temp_city = city
@@ -567,7 +519,6 @@ class updateview(APIView):
                     temp_country = country
                 else:
                     temp_country = passuser.country
-
 
                 fnl_JSON = {
                 "id": passuser.id,
@@ -667,8 +618,6 @@ class Predict(APIView):
             "Remarks": "The Given Image of Dog is a/an n02109047-Great_Dane",
             "isDog": True,
             "breed_Name": "n02109047-Great_Dane"
-          
-            
          }
 
         if output["isDog"] == False:
@@ -686,8 +635,6 @@ class Predict(APIView):
             print("DELETED")
         else:
             print("NOT DELETED")
-            
-    
         if url and userid and users is not None:
             print(output["dogId"])
 
@@ -716,10 +663,7 @@ class Predict(APIView):
                     "Status" : "Success",
                     "Dog" : file_serializer.data
             })
-
-        
-        
-
+                
         # fnl_JSON = {
         #    "dogId": "95",
         #    "accuracy": "87.2",
@@ -733,141 +677,4 @@ class Predict(APIView):
         #   the result is a JSON string:
         # print(output)
 
-
-
-
-
 #                                                                               ----------: END OF APIS :----------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-# TESTING APIS -: NOT IN USE :-
-
-# class BreedView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Breed.objects.all()
-#     serializer_class = BreedSerializer
-
-# class ImageListView(generics.ListCreateAPIView):
-#     queryset = Image.objects.all()
-#     serializer_class = ImageSerializer
-
-# class ImageView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Image.objects.all()
-#     serializer_class = ImageSerializer
-
-# class Feed_ItemView(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = Feed_ItemSerializer
-#     queryset = Feed_Item.objects.all()
-
-
-# EDIT ACCOUNT API
-# class ProfileUpdateAPI(generics.UpdateAPIView):
-#     authentication_classes = (authentication.TokenAuthentication,)
-#     permission_classes = (permissions.IsAuthenticated,)
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-
-# class DogListView(generics.ListCreateAPIView):
-#     queryset = Dog.objects.all()
-#     serializer_class = DogSerializer
-
-# class DogView(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = DogSerializer
-#     queryset = Dog.objects.all()
-
-
-# class UserListView(generics.ListCreateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-
-# class UserView(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
-
-#     def change_org_alert_status(request):
-#         id = request.GET.get("id")
-#         status = request.GET.get("Status")
-#         alert = OrganizationAlerts.objects.get(id=id)
-#         alert.status = status
-#         alert.save()
-#         data = {"result": "ok"}
-
-#         return JsonResponse(data, safe=False)
-
-# class LikeddogListView(generics.ListCreateAPIView):
-#     queryset = Liked_Dog.objects.all()
-#     serializer_class = Liked_DogSerializer
-
-# class LikeddogView(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = Liked_DogSerializer
-#     queryset = Liked_Dog.objects.all()
-
-# class Feed_ItemView(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = Feed_ItemSerializer
-#     queryset = Feed_Item.objects.all()
-
-# class Mydogfeeds(APIView):
-#     queryset=User.objects.all()
-#     serializer_class=UserSerializer
-    
-#     def get(self, request):
-#         serializer = request.user.id
-
-
-# class logout(APIView):
-#    def post(self, request):
-#        try:
-#            request.user.auth_token.delete()
-#        except (AttributeError, ObjectDoesNotExist):
-#            pass
-
-#        django_logout(request)
-#        return Response(status=status.HTTP_200_OK)
-
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-# HELPING LINKS
-
-# https://books.agiliq.com/projects/django-api-polls-tutorial/en/latest/more-views-and-viewsets.html
-# https://stackoverflow.com/questions/4659360/get-django-object-id-based-on-model-attribute
-
